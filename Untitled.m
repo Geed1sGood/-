@@ -13,7 +13,7 @@ f0 = 5 ;
 A = 0.5;
 D = 0.25; 
 n = 512; 
-p=3.1416
+p=3.1416;
 t = [0:0.02:5];		% вектор часу
 h=t*2*p*f0;
 s =sin(h);
@@ -35,12 +35,12 @@ ylabel('Амплітуда');
 xlabel('Відліки');
 %=== Завдання #1.2 ===
 % Обчислення оцінки дисперсії шуму, дисперсії сигналу та відношення шум/сигнал
-disp(var(v));
-disp(var(x));
-l=snr(s,v);
+disp(var(v))
+disp(var(x))
+l=snr(s,v)
 %=== Завдання #1.3 ===
 % Обчислення незміщеної оцінки АКФ змодельованого процесу
-t1=-5:0.02:5
+t1=-5:0.02:5;
 maxlag1=1;
 maxlag2=2;
 maxlag3=3;
@@ -48,11 +48,11 @@ ran = xcorr(x,x,'unbiased');
 rlag12=xcorr(x,x,maxlag1, 'unbiased');
 rlag13=xcorr(x,x,maxlag2, 'unbiased');
 rlag14=xcorr(x,x,maxlag3, 'unbiased');
-figure(3)
+figure(2)
 subplot (3, 1, 1); plot (rlag12); grid on;
 subplot (3, 1, 2); plot (rlag13); grid on;
 subplot (3, 1, 3); plot (rlag14); grid on;
-figure(4)
+figure(3)
 rlag15=xcorr(x,x,maxlag1+6, 'biased');
 rlag16=xcorr(x,x,maxlag2+6, 'biased');
 rlag17=xcorr(x,x,maxlag3+6, 'biased');
@@ -72,7 +72,7 @@ s =sin(h);
 v = D*randn(1,length(t));  
 x=s+v;  
 % Графіки отриманих сигналів
-figure()
+figure(4)
 subplot (3, 1, 1); plot(t, v), grid on;
 title ('Сигнал x(t)');
 ylabel('Амплітуда');
@@ -87,8 +87,8 @@ ylabel('Амплітуда');
 xlabel('Відліки');
 %=== Завдання #1.2 ===
 
-maxlag1=1;
-maxlag2=2;
+maxlag1=fix(0.2*length(x));
+maxlag2=100;
 maxlag3=3;
 ran = xcorr(x,x,'unbiased');
 rlag12=xcorr(x,x,maxlag1, 'unbiased');
@@ -124,3 +124,12 @@ n1 = (t1*fs) + 1;
 n2 = (t2*fs) + 1;
 figure(8)
 plot(t(n1:n2),eeg1(n1:n2));
+%=== Завдання #2.3 ===
+% Обчислення незміщеної оцінки АКФ сигналу ЕЕГ
+maxlag3 =fix(0.9*length(eeg1))
+akf = xcorr(eeg1,eeg1, maxlag3, 'unbiased');
+figure(8)
+plot(akf);
+
+
+

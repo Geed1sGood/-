@@ -98,7 +98,7 @@ figure(5)
 subplot (3, 1, 1); plot (rlag12); grid on;
 subplot (3, 1, 2); plot (rlag13); grid on;
 subplot (3, 1, 3); plot (rlag14); grid on;
-max(rlag15);
+max(rlag15)
 figure(6)
 rlag15=xcorr(x,x,maxlag1+6, 'biased');
 rlag16=xcorr(x,x,maxlag2+6, 'biased');
@@ -110,17 +110,18 @@ subplot (3, 1, 3); plot (rlag17); grid on;
 %=== Завдання #2.1 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-p4.dat)
 fs =100; 
-eeg =load('eeg1-p4.dat'); % сигнал EEU
-eeg1 = detrend(eeg);
+ecg =load('eeg1-p4.dat'); % сигнал EEU
+ecg1 = detrend(ecg);
 figure(7)   
-plot(eeg1);
+plot(ecg1);
 %=== Завдання #2.2 ===
 % Виділення епохи сигналу ЕЕГ від t1 = 4,7 с до t2 = 5,8 с
 fs=100;
 t1 =4.7; 
 t2 =5.8;
-t = (0:length(eeg1)-1)/fs;
+t = (0:length(eeg)-1)/fs;
 n1 = (t1*fs) + 1; 
 n2 = (t2*fs) + 1;
+ecg1 = detrend(ecg);
 figure(8)
-plot(t(n1:n2),eeg1(n1:n2));
+plot(,ecg1)

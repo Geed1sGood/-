@@ -130,6 +130,8 @@ maxlag3 =fix(0.9*length(eeg1))
 akf = xcorr(eeg1,eeg1, maxlag3, 'unbiased');
 figure(8)
 plot(akf);
+max(akf);
+
 
 
 

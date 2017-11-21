@@ -140,6 +140,29 @@ figure(9)
 plot(f,Sxx), grid on;
 %=== Завдання #2.6 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-f3.dat)
+fs = 100;
+eeg12 = load('eeg1-f3.dat');
+eeg13 = detrend(eeg12);
+t = (0:length(eeg13)-1)/fs;
+figure(10)
+plot(t,eeg13)
+ 
+% Виділення епохи сигналу ЕЕГ від t1 = 4,2 с до t2 = 4,96 с
+fs=100;
+t1 =4.2; 
+t2 =4.96;
+t = (0:length(eeg13)-1)/fs;
+n1 = (t1*fs) + 1; 
+n2 = (t2*fs) + 1;
+figure(11)
+plot(t(n1:n2),eeg13(n1:n2));
+
+% Обчислення незміщеної оцінки АКФ сигналу ЕЕГ
+maxlag4 =fix(0.7*length(eeg13))
+akf2 = xcorr(eeg1,eeg1, maxlag4, 'unbiased');
+figure(12)
+plot(akf2);
+max(akf2);
 
 
 

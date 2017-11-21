@@ -134,13 +134,35 @@ max(akf);
 %=== Завдання #2.5 ===
 % Обчислення спектральної щільності сигналу
 Sxx = abs(fft(eeg1))/length(eeg);
-N = length(Sxx);
+N = length(eeg1);
 f = (0:N-1)/N*fs;
-Syy =[Sxx(1),2*Sxx(2:end-1)
 figure(9)
-plot(f,(Sxx)), grid on;
+plot(f,Sxx), grid on;
+%=== Завдання #2.6 ===
+% Завантаження сигналу ЕЕГ файл (eeg1-f3.dat)
+fs = 100;
+eeg12 = load('eeg1-f3.dat');
+eeg13 = detrend(eeg12);
+t = (0:length(eeg13)-1)/fs;
+figure(10)
+plot(t,eeg13)
+ 
+% Виділення епохи сигналу ЕЕГ від t1 = 4,2 с до t2 = 4,96 с
+fs=100;
+t1 =4.2; 
+t2 =4.96;
+t = (0:length(eeg13)-1)/fs;
+n1 = (t1*fs) + 1; 
+n2 = (t2*fs) + 1;
+figure(11)
+plot(t(n1:n2),eeg13(n1:n2));
 
-
+% Обчислення незміщеної оцінки АКФ сигналу ЕЕГ
+maxlag4 =fix(0.9*length(eeg1))
+akf = xcorr(eeg1,eeg1, maxlag3, 'unbiased');
+figure(8)
+plot(akf);
+max(akf);
 
 
 

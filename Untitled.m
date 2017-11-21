@@ -8,6 +8,7 @@ disp('Виконав:  , група ... ННІІДС')
 
 %=== Завдання #1.1 ===
 % Моделювання стаціонарного випадкового процесу
+
 fs = 20;
 f0 = 5 ;
 A = 0.5;
@@ -19,7 +20,9 @@ h=t*2*p*f0;
 s =sin(h);
 v = D*randn(1,length(t));  
 x=s+v;  
+
 % Графіки отриманих сигналів
+
 figure(1)
 subplot (3, 1, 1); plot(t, v), grid on;
 title ('Сигнал x(t)');
@@ -33,13 +36,17 @@ subplot (3, 1, 3); plot (t, x); grid on;
 title ('Сигнал y(t)');
 ylabel('Амплітуда');
 xlabel('Відліки');
+
 %=== Завдання #1.2 ===
 % Обчислення оцінки дисперсії шуму, дисперсії сигналу та відношення шум/сигнал
+
 disp(var(v))
 disp(var(x))
 l=snr(s,v)
+
 %=== Завдання #1.3 ===
 % Обчислення незміщеної оцінки АКФ змодельованого процесу
+
 t1=-5:0.02:5;
 maxlag1=1;
 maxlag2=2;
@@ -71,7 +78,9 @@ h=t*2*p*f0;
 s =sin(h);
 v = D*randn(1,length(t));  
 x=s+v;  
+
 % Графіки отриманих сигналів
+
 figure(4)
 subplot (3, 1, 1); plot(t, v), grid on;
 title ('Сигнал x(t)');
@@ -85,6 +94,7 @@ subplot (3, 1, 3); plot (t, x); grid on;
 title ('Сигнал y(t)');
 ylabel('Амплітуда');
 xlabel('Відліки');
+
 %=== Завдання #1.2 ===
 
 maxlag1=fix(0.2*length(x));
@@ -109,13 +119,16 @@ subplot (3, 1, 3); plot (rlag17); grid on;
 
 %=== Завдання #2.1 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-p4.dat)
+
 fs =100; 
 eeg1_p4 =load('eeg1-p4.dat'); % сигнал EEU
 eeg1 = detrend(eeg1_p4);
 figure(7)   
 plot(eeg1);
+
 %=== Завдання #2.2 ===
 % Виділення епохи сигналу ЕЕГ від t1 = 4,7 с до t2 = 5,8 с
+
 fs=100;
 t1 =4.7; 
 t2 =5.8;
@@ -124,22 +137,30 @@ n1 = (t1*fs) + 1;
 n2 = (t2*fs) + 1;
 figure(8)
 plot(t(n1:n2),eeg1_p4(n1:n2));
+
 %=== Завдання #2.3 ===
 % Обчислення незміщеної оцінки АКФ сигналу ЕЕГ
+
 maxlag3 =fix(0.9*length(eeg1_p4))
 akf = xcorr(eeg1_p4,eeg1_p4, maxlag3, 'unbiased');
 figure(8)
 plot(akf);
 max(akf);
+
 %=== Завдання #2.4 ===
 % Обчислення спектральної щільності сигналу
+
 Sxx = abs(fft(eeg1_p4))/length(eeg1_p4);
+A=Sxx';
+B=[A(1),2.*A(2:end-1),A(end)];
 N = length(eeg1_p4);
 f = (0:N-1)/N*fs;
 figure(9)
-plot(f,Sxx), grid on;
+plot(f,B), grid on;
+
 %=== Завдання #2.5 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-f3.dat)
+
 fs = 100;
 eeg1_f3 = load('eeg1-f3.dat');
 eeg1_f3 = detrend(eeg1_f3);

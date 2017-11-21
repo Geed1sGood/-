@@ -134,12 +134,11 @@ max(akf);
 %=== Завдання #2.5 ===
 % Обчислення спектральної щільності сигналу
 Sxx = abs(fft(eeg1))/length(eeg);
-N = length(eeg1);
+N = length(Sxx);
 f = (0:N-1)/N*fs;
+Syy =[Sxx(1),2*Sxx(2:end-1)
 figure(9)
-plot(f,Sxx), grid on;
-%=== Завдання #2.6 ===
-% Завантаження сигналу ЕЕГ файл (eeg1-f3.dat)
+plot(f,(Sxx)), grid on;
 
 
 

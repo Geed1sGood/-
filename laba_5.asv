@@ -8,87 +8,69 @@ disp('Виконав:  , група ... ННІІДС')
 
 %=== Завдання #1.1 ===
 % Моделювання стаціонарного випадкового процесу
-
-fs = 20;
+fs = 20; 
 f0 = 5 ;
 A = 0.5;
-D = 0.25;  
+D = 0.25;
+n=512;
 p=3.1416;
-t = [0:0.02:5];		% вектор часу
+t=(0:(n-1))/fs; % вектор часу
 h=t*2*p*f0;
-s =sin(h);
+s =A*sin(h);
 v = sqrt(D)*randn(1,length(t));  
 x=s+v;  
-
 % Графіки отриманих сигналів
-
 figure(1)
 subplot (3, 1, 1); plot(t, v), grid on;
 title ('Сигнал x(t)');
-ylabel('Амплітуда');
-xlabel('Відліки');
+ylabel('Амплітуда'); xlabel('Відліки');
 subplot (3, 1, 2); plot (t, s); grid on;
 title ('Сигнал s(t)');
-ylabel('Амплітуда');
-xlabel('Відліки');
+ylabel('Амплітуда'); xlabel('Відліки');
 subplot (3, 1, 3); plot (t, x); grid on;
 title ('Сигнал y(t)');
-ylabel('Амплітуда');
-xlabel('Відліки');
-
+ylabel('Амплітуда'); xlabel('Відліки');
 %=== Завдання #1.2 ===
 % Обчислення оцінки дисперсії шуму, дисперсії сигналу та відношення шум/сигнал
-
-disp(var(v));
-disp(var(x));
-l=snr(s,v)
-
+fprintf('Дисперсія шуму = %4.3g\n',var(v))
+fprintf('Дисперсія шуму = %4.3g\n',var(v))
+fprintf('Дисперсія шуму = %4.3g\n',snr(s,v))
 %=== Завдання #1.3 ===
-% Обчислення незміщеної оцінки АКФ змодельованого процесу
-maxlag_02=fix(0.2*length(x));
-maxlag_09 = fix(0.9*length(x));
-akf_biased = xcorr(x,x,maxlag_02,'unbiased');
-akf_unbiased = xcorr(x,x,maxlag_09, 'biased');
-figure(2)
-subplot (2, 1, 1); plot (akf_biased); grid on;
-subplot (2, 1, 1); plot (akf_unbiased); grid on;
-%=== Завдання #1.4 ===
-% Обчислення зміщеної оцінки АКФ змодельованого процесу
-figure(3)
-akf1=xcorr(x,x,maxlag1+6, 'biased');
-akf2=xcorr(x,x,maxlag2+6, 'biased');
-akf3=xcorr(x,x,maxlag3+6, 'biased');
-subplot (3, 1, 1); plot (akf1); grid on;
-subplot (3, 1, 2); plot (akf2); grid on;
-subplot (3, 1, 3); plot (akf3); grid on;
-
+% Обчислення незміщеної та не зміщеної оцінки АКФ змодельованого процесу
+maxlag_02=fix(0.2*length(x)); %максимальна затримка
+maxlag_09 = fix(0.9*length(x));%максимальна затримка
+akf_biased_02 = xcorr(x,x,maxlag_02,'unbiased'); %оцінки:
+akf_biased_09 = xcorr(x,x,maxlag_09,'unbiased');
+akf_unbiased_02 = xcorr(x,x,maxlag_02, 'biased');
+akf_unbiased_09 = xcorr(x,x,maxlag_09, 'biased');
+figure(2) %графіки отриманих оцінок
+subplot (4, 1, 1); plot (akf_biased_02); grid on;
+title('Графік зміщеної оцінки сигналу(maxlag = 0.2)');;
+subplot (4, 1, 2); plot (akf_unbiased_02); grid on;
+title('Графік не зміщеної оцінки сигналу(maxlag = 0.9)');
+subplot (4, 1, 3); plot (akf_biased_09); grid on
+title('Графік зміщеної оцінки сигналу(maxlag = 0.2)');
+subplot (4, 1, 4); plot (akf_unbiased_09); grid on
+title('Графік не зміщеної оцінки сигналу(maxlag = 0.9)');
 %=== Завдання #1.5 ===
 % Обчислення оцінки АКФ змодельованого процесу при збільшенні тривалості процесу
-fs = 202;
-f0 = 5 ;
-A = 0.5;
-D = 0.25; 
-n = 512; 
-p=3.1416
-t1 = 100;% вектор часу
+t1 = 100;% векторb часу
 t2 = 1000;
-h1=t1*2*p*f0;
+h1=t1*2*p*f0;%параметри сигналу
 s1 =sin(h1);
-v1 = sqrt(D)*randn(1,length(t1));  
-x1=s1+v1;
+v1 = sqrt(D)*randn(1,length(t1));  %параметри шуму
+x1=s1+v1; %модельований сигнал з тривалістю 100  
 h2=t2*2*p*f0;
 s2 =sin(h2);
 v2 = sqrt(D)*randn(1,length(t2));  
-x2=s2+v2;
-maxlag1=100;
+x2=s2+v2; %модельований сигнал з тривалістю 1000  
+maxlag1=50;
+maxlag2=5;
 akf_un=xcorr(x1,x1,maxlag1, 'biased');
-akf_bias=xcorr(x2,x2,maxlag1, 'unbiased');
-
-figure(4)
+akf_bias=xcorr(x2,x2,maxlag2, 'biased');
+figure(3) %Графіки 
 subplot (2, 1, 1); plot (akf_un); grid on;
 subplot (2, 1, 2); plot (akf_bias); grid on;
-
-
 %=== Завдання #2.1 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-p4.dat)
 fs =100; 
@@ -293,6 +275,7 @@ N = length(vkf3);
 f = (0:N-1)/N*fs;
 figure(25)
 plot(f,Bxy3), grid on;
+
 
 
 

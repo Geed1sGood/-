@@ -49,8 +49,8 @@ l=snr(s,v)
 
 t1=-5:0.02:5;
 maxlag1=1;
-maxlag2=2;
-maxlag3=3;
+maxlag2=50;
+maxlag3=100;
 ran = xcorr(x,x,'unbiased');
 rlag12=xcorr(x,x,maxlag1, 'unbiased');
 rlag13=xcorr(x,x,maxlag2, 'unbiased');
@@ -105,6 +105,7 @@ rlag12=xcorr(x,x,maxlag1, 'unbiased');
 rlag13=xcorr(x,x,maxlag2, 'unbiased');
 rlag14=xcorr(x,x,maxlag3, 'unbiased');
 figure(5)
+
 subplot (3, 1, 1); plot (rlag12); grid on;
 subplot (3, 1, 2); plot (rlag13); grid on;
 subplot (3, 1, 3); plot (rlag14); grid on;
@@ -119,7 +120,6 @@ subplot (3, 1, 3); plot (rlag17); grid on;
 
 %=== Завдання #2.1 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-p4.dat)
-
 fs =100; 
 eeg1_p4 =load('eeg1-p4.dat'); % сигнал EEU
 eeg1 = detrend(eeg1_p4);
@@ -140,7 +140,6 @@ plot(t(n1:n2),eeg1_p4(n1:n2));
 
 %=== Завдання #2.3 ===
 % Обчислення незміщеної оцінки АКФ сигналу ЕЕГ
-
 maxlag3 =fix(0.9*length(eeg1_p4))
 akf = xcorr(eeg1_p4,eeg1_p4, maxlag3, 'unbiased');
 figure(8)
@@ -149,18 +148,17 @@ max(akf);
 
 %=== Завдання #2.4 ===
 % Обчислення спектральної щільності сигналу
-
 Sxx = abs(fft(eeg1_p4))/length(eeg1_p4);
 A=Sxx';
 B=[A(1),2.*A(2:end-1),A(end)];
+Y=fftshift(B);
 N = length(eeg1_p4);
 f = (0:N-1)/N*fs;
 figure(9)
-plot(f,B), grid on;
+plot(f,Y), grid on;
 
 %=== Завдання #2.5 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-f3.dat)
-
 fs = 100;
 eeg1_f3 = load('eeg1-f3.dat');
 eeg1_f3 = detrend(eeg1_f3);
@@ -179,7 +177,7 @@ figure(11)
 plot(t(n1:n2),eeg1_f3(n1:n2));
 
 % Обчислення незміщеної оцінки АКФ сигналу ЕЕГ
-maxlag4 =20
+maxlag4 =20;
 akf2 = xcorr(eeg1_f3,eeg1_f3, maxlag4, 'unbiased');
 figure(12)
 plot(akf2);
@@ -187,10 +185,12 @@ max(akf2);
 
 % Обчислення спектральної щільності сигналу
 Sxx1 = abs(fft(eeg1_f3))/length(eeg1_f3);
+C = Sxx1';
+Z = fftshift(C);
 N2 = length(eeg1_f3);
 f = (0:N2-1)/N2*fs;
 figure(13)
-plot(f,Sxx1), grid on;
+plot(f,Z), grid on;
 
 %=== Завдання #3.1 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-o2.dat)
@@ -233,10 +233,66 @@ plot(vkf1);
 %=== Завдання #3.4 ===
 % Обчислення взаємної спектральної щільності сигналів ЕЕГ
 Sxy = abs(fft(vkf1)/length(vkf1));
+Axy = Sxy';
+Bxy = fftshift(Axy);
 N = length(vkf1);
 f = (0:N-1)/N*fs;
 figure(18)
-plot(f,Sxy), grid on;
+plot(f,Bxy), grid on;
+
+%=== Завдання #3.5 ===
+% Завантаження сигналу ЕЕГ файл (eeg1-p3.dat) та сигналу (eeg1-p4.dat)
+fs = 100;
+eeg1_p3 = load('eeg1-p3.dat');
+eeg1_p3 = detrend(eeg1_p3);
+eeg1_p4 = load('eeg1-p4.dat');
+eeg1_p4 = detrend(eeg1_p4);
+t_p3 = (0:length(eeg1_p3)-1)/fs;
+t_p4 = (0:length(eeg1_p4)-1)/fs;
+figure(19)
+subplot (2, 1, 1); plot(t_p3, eeg1_p3);
+subplot (2, 1, 2); plot(t_p4, eeg1_p4);
+
+% Виділення епохи сигналів ЕЕГ від t1 = 4,7 с до t2 = 5,8 с
+fs=100;
+t1 =4,7; 
+t2 =5,8;
+t_p3 = (0:length(eeg1_p3)-1)/fs;
+t_p4 = (0:length(eeg1_p4)-1)/fs;
+n1 = (t1*fs) + 1; 
+n2 = (t2*fs) + 1;
+figure(20)
+subplot (2, 1, 1); plot(t11(n1:n2),eeg1_p3(n1:n2));
+subplot (2, 1, 2); plot(t22(n1:n2),eeg1_p4(n1:n2));
+
+% Обчислення ВКФ сигналів ЕЕГ
+maxlag1=1;
+vkf2 = xcorr(eeg1_o2,eeg1_c3,'biased');
+figure(21)
+plot(vkf2);
+
+% Обчислення взаємної спектральної щільності сигналів ЕЕГ
+Svkf2 = abs(fft(vkf2)/length(vkf2));
+Axy2 = Svkf2';
+Bxy2 = fftshift(Axy2);
+N = length(vkf2);
+f = (0:N-1)/N*fs;
+figure(22)
+plot(f,Bxy2), grid on;
+
+%=== Завдання #3.6 ===
+% Завантаження сигналу ЕЕГ файл (eeg1-f3.dat)
+% Завантаження сигналу ЕЕГ файл (eeg1-f4.dat)
+fs = 100;
+eeg1_f3 = load('eeg1-f3.dat');
+eeg1_f3 = detrend(eeg1_f3);
+eeg1_f4 = load('eeg1-f4.dat');
+eeg1_f4 = detrend(eeg1_f4);
+t_f3 = (0:length(eeg1_f3)-1)/fs;
+t_f4 = (0:length(eeg1_f4)-1)/fs;
+figure(23)
+subplot (2, 1, 1); plot(t_f3, eeg1_f3);
+subplot (2, 1, 2); plot(t_f4, eeg1_f4);
 
 
 

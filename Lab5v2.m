@@ -40,7 +40,8 @@ fprintf('Відношення сигнал/шум = %4.3g\n',snr(s,v))
 
 %=== Завдання #1.3-1.4 ===
 % Обчислення незміщеної та не зміщеної оцінки АКФ змодельованого процесу
-akf_biased_02 = xcorr(x,x,fix(0.2*length(x)),'unbiased');%оцінки не зміщені
+akf_biased_02 = xcorr(x,x,0,'unbiased');%оцінки не зміщені
+max(akf_biased_02)
 akf_biased_09 = xcorr(x,x,fix(0.9*length(x)),'unbiased');%оцінки не зміщені
 akf_unbiased_02 = xcorr(x,x,fix(0.2*length(x)),'biased');%оцінки зміщені
 akf_unbiased_09 = xcorr(x,x,fix(0.9*length(x)),'biased');%оцінки зміщені
@@ -110,14 +111,12 @@ ylabel('Значення'); xlabel('Відліки');
 
 %=== Завдання #2.4 ===
 % Обчислення спектральної щільності сигналу
-Sxx = abs(fft(eeg1_p4)/length(eeg1_p4)); %обчислення модуля швидкого перетворення Фурьє
-A=Sxx'; %транспонування матриці 
-B=[A(1),2.*A(2:end-1),A(end)]; %Отримання односторонньої спектральної щільності
-Y=fftshift(B); %нормування 
-N = length(eeg1_p4);
-f = (0:N-1)/N*fs;
+Sx = abs(fft(eeg1_p4)/length(eeg1_p4)); %обчислення модуля швидкого перетворення Фурьє
+B=Sx(1:length(eeg1_p4)/2+1);%Отримання односторонньої спектральної щільності 
+B(2:end-1)=2*B(2:end-1);
+f =fs*(0:(length(eeg1_p4)/2))/length(eeg1_p4);
 figure(7)
-plot(f,Y), grid on;
+plot(f,B), grid on;
 title('Спектральна щільність');
 ylabel('Sxx'); xlabel('Відліки');
 
@@ -149,13 +148,11 @@ ylabel('Значення'); xlabel('Відліки');
 
 % Обчислення спектральної щільності сигналу
 Sxx1 = abs(fft(eeg1_f3))/length(eeg1_f3);% обчислення модуля спектральної щільності
-C = Sxx1'; % транспонування
-W=[C(1),2.*C(2:end-1),C(end)];
-Z = fftshift(W); %норміровка
-N2 = length(eeg1_f3);
-f = (0:N2-1)/N2*fs;
+Bx1=Sxx1(1:length(eeg1_f3)/2+1);%Отримання односторонньої спектральної щільності 
+Bx1(2:end-1)=2*Bx1(2:end-1);
+f =fs*(0:(length(eeg1_f3)/2))/length(eeg1_f3);
 figure(11)
-plot(f,Z), grid on;
+plot(f,Bx1), grid on;
 title('Спектральна щільність');
 ylabel('Sxx1'); xlabel('Відліки');
 
@@ -200,15 +197,13 @@ ylabel('Значення'); xlabel('Відліки');
 %=== Завдання #3.4 ===
 % Обчислення взаємної спектральної щільності сигналів ЕЕГ
 Sxy = abs(fft(vkf1)/length(vkf1));  % обчислення модуля спектральної щільності
-Axy = Sxy'; %транспонування
-B=[Axy(1),2.*Axy(2:end-1),Axy(end)];
-Bxy = fftshift(B); %нормування
-N = length(vkf1);
-f = (0:N-1)/N*fs;
+Bz=Sxy(1:length(vkf1)/2+1);%Отримання односторонньої спектральної щільності 
+Bz(2:end-1)=2*Bz(2:end-1);
+f =fs*(0:(length(vkf1)/2))/length(vkf1);
 figure(15)
-plot(f,Bxy), grid on;
+plot(f,Bz), grid on;
 title ('Взаємна спектральна щільность заданих сигналів ЕЕГ')
-ylabel('Sxу'); xlabel('Частота');
+ylabel('Bz'); xlabel('Частота');
 
 %=== Завдання #3.5 ===
 % Завантаження сигналу ЕЕГ файл (eeg1-p3.dat) та сигналу (eeg1-p4.dat)
@@ -244,14 +239,12 @@ title ('% Обчислення ВКФ сигналів ЕЕГ eeg1_p3 та eeg1_p4')
 ylabel('Значення'); xlabel('Відліки');
 
 % Обчислення взаємної спектральної щільності сигналів ЕЕГ
-Svkf2 = abs(fft(vkf2)/length(vkf2));
-Axy2 = Svkf2';
-B=[Axy2(1),2.*Axy2(2:end-1),Axy2(end)];
-Bxy2 = fftshift(B);
-N = length(vkf2);
-f = (0:N-1)/N*fs;
+Svkf2 = abs(fft(vkf2)/length(vkf2)); %обчислення модуля швидкого перетворення Фурьє
+Bn=Sx(1:length(vkf2)/2+1);%Отримання односторонньої спектральної щільності 
+Bn(2:end-1)=2*Bn(2:end-1);
+f =fs*(0:(length(vkf2)/2))/length(vkf2);
 figure(19)
-plot(f,Bxy2), grid on;
+plot(f,Bn), grid on;
 title ('Взаємна спектральна щільность сигналів eeg1_p3 та eeg1-p4')
 ylabel('Значення'); xlabel('Частота');
 
@@ -293,14 +286,12 @@ title ('ВКФ епох сигналів eeg1_f3 та eeg1_f4')
 ylabel('Значення'); xlabel('Відліки');
 
 % Обчислення взаємної спектральної щільності сигналів ЕЕГ
-Svkf3 = abs(fft(vkf3)/length(vkf3)); % обчислення модуля спектральної щільності
-Axy3 = Svkf3'; % транспонування
-VB=[Axy3(1),2.*Axy3(2:end-1),Axy3(end)];
-Bxy3 = fftshift(VB); %нормування
-N = length(vkf3);
-f = (0:N-1)/N*fs;
+Sx = abs(fft(vkf3)/length(vkf3)); %обчислення модуля швидкого перетворення Фурьє
+Bq=Sx(1:length(vkf3)/2+1);%Отримання односторонньої спектральної щільності 
+Bq(2:end-1)=2*Bq(2:end-1);
+f =fs*(0:(length(vkf3)/2))/length(vkf3);
 figure(23)
-plot(f,Bxy3), grid on;
+plot(f,Bq), grid on;
 title ('Взаємна спектральна щільность епох сигналів eeg1_p3 та eeg1-p4')
 ylabel('Значення'); xlabel('частота');
 

@@ -40,8 +40,7 @@ fprintf('Відношення сигнал/шум = %4.3g\n',snr(s,v))
 
 %=== Завдання #1.3-1.4 ===
 % Обчислення незміщеної та не зміщеної оцінки АКФ змодельованого процесу
-akf_biased_02 = xcorr(x,x,0,'unbiased');%оцінки не зміщені
-max(akf_biased_02)
+akf_biased_02 = xcorr(x,x,fix(0.2*length(x)),'unbiased');%оцінки не зміщені
 akf_biased_09 = xcorr(x,x,fix(0.9*length(x)),'unbiased');%оцінки не зміщені
 akf_unbiased_02 = xcorr(x,x,fix(0.2*length(x)),'biased');%оцінки зміщені
 akf_unbiased_09 = xcorr(x,x,fix(0.9*length(x)),'biased');%оцінки зміщені
